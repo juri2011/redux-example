@@ -50,6 +50,20 @@
                 </article>
             `;
         }
+        function reducer(state, action){
+            //최초 실행의 경우 초기값 세팅
+            if(state === undefined){
+                return {
+                    contents: [
+                        {id:1, title:'아차모', desc:'병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.'},
+                        {id:2, title:'나무지기', desc:'숲도마뱀 포켓몬. 침착하고 냉정하며 무슨 일에도 동요하지 않는다. 몸집이 큰 포켓몬이 노려봐도 한 걸음도 꿈쩍 않고 되노려본다.'},
+                        {id:3, title:'물짱이', desc:'늪물고기 포켓몬. 머리의 지느러미는 매우 민감한 레이더. 물이나 공기의 움직임으로 눈을 쓰지 않고도 주위의 모습을 포착할 수 있다.'},
+                    ]
+                }
+            }
+            
+        }
+        var store = Redux.createStore(reducer);
         subject();
         TOC();
         control();

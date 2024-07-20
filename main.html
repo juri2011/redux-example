@@ -7,6 +7,9 @@
   </head>
   <body>
     <div id="subject"></div>
+    <div id="toc"></div>
+    <div id="control"></div>
+    <div id="content"></div>
     <script>
         //header 부품화 : header 양식이 필요할 때마다 subject()를 호출하여 사용할 수 있다
         //재사용도 가능
@@ -19,21 +22,41 @@
                 </header>
             `;
         }
+        //TOC : Table of Contents(목록)
+        function TOC(){
+            document.querySelector('#toc').innerHTML = `
+                <nav>
+                    <ol>
+                        <li><a href="1.html">아차모</a></li>
+                        <li><a href="2.html">나무지기</a></li>
+                        <li><a href="2.html">물짱이</a></li>
+                    </ol>
+                </nav>
+            `;
+        }
+        function control(){
+            document.querySelector('#control').innerHTML = `
+                <ul>
+                    <li><a href="create">작성하기</a></li>
+                    <li><input type="button" value="삭제하기" /></li>
+                </ul>
+            `;
+        }
+        function article(){
+            document.querySelector('#content').innerHTML = `
+                <article>
+                    <h2>아차모</h2>
+                    병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.
+                </article>
+            `;
+        }
         subject();
+        TOC();
+        control();
+        article();
     </script>
     
-    <nav>
-      <ol>
-        <li><a href="1.html">아차모</a></li>
-        <li><a href="2.html">나무지기</a></li>
-        <li><a href="2.html">물짱이</a></li>
-      </ol>
-    </nav>
-    <article>
-      <ul>
-        <li><a href="create">작성하기</a></li>
-        <li><input type="button" value="삭제하기" /></li>
-      </ul>
-    </article>
+    
+    
   </body>
 </html>

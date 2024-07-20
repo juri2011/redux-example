@@ -26,14 +26,19 @@
         //TOC : Table of Contents(목록)
         function TOC(){
             var state = store.getState();
-            console.log('state', state);
             var i = 0;
             var liTags = ''; //동적으로 추가 될 리스트 태그들
 
             while(i<state.contents.length){
                 liTags = liTags + `
                     <li>
-                        <a href=""${state.contents[i].id}>${state.contents[i].title}</a>
+                        <a onclick="
+                            event.preventDefault();
+                            var action = {type:'SELECT', id:${state.contents[i].id}}
+                            store.dispatch(action);
+                        " href="${state.contents[i].id}">
+                            ${state.contents[i].title}
+                        </a>
                     </li>
                 `;
                 i = i + 1;
@@ -64,6 +69,7 @@
             //최초 실행의 경우 초기값 세팅
             if(state === undefined){
                 return {
+                    selected_id:null,
                     contents: [
                         {id:1, title:'아차모', desc:'병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.'},
                         {id:2, title:'나무지기', desc:'숲도마뱀 포켓몬. 침착하고 냉정하며 무슨 일에도 동요하지 않는다. 몸집이 큰 포켓몬이 노려봐도 한 걸음도 꿈쩍 않고 되노려본다.'},
@@ -71,6 +77,12 @@
                     ]
                 }
             }
+            var newState;
+            if(action.type === "SELECT"){
+                newState = Object.assign({}, state, {selected_id:action.id});
+            }
+            console.log(action, state, newState);
+            return newState;
             
         }
         var store = Redux.createStore(reducer);

@@ -41,8 +41,9 @@ function red() {
                 store.dispatch({type:'CHANGE_COLOR', color:'red'});
             ">
         </div>
-`;
+    `;
 }
+store.subscribe(red); //state의 값이 바뀔 때마다 red함수가 호출
 red();
       </script>
   </body>

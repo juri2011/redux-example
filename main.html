@@ -6,11 +6,22 @@
     <title>포켓몬 위키</title>
   </head>
   <body>
-    <header>
-      <h1>포켓몬 위키</h1>
-      안녕하세요? 포켓몬 위키입니다.
-      <h2>호연지방에 사는 포켓몬 목록</h2>
-    </header>
+    <div id="subject"></div>
+    <script>
+        //header 부품화 : header 양식이 필요할 때마다 subject()를 호출하여 사용할 수 있다
+        //재사용도 가능
+        function subject(){
+            document.querySelector('#subject').innerHTML = `
+                <header>
+                    <h1>포켓몬 위키</h1>
+                    안녕하세요? 포켓몬 위키입니다.
+                    <h2>호연지방에 사는 포켓몬 목록</h2>
+                </header>
+            `;
+        }
+        subject();
+    </script>
+    
     <nav>
       <ol>
         <li><a href="1.html">아차모</a></li>

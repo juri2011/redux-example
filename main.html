@@ -62,14 +62,22 @@
                             mode: 'create'                            
                         });
                     " href="create">작성하기</a></li>
-                    <li><input onclick="
-                            store.dispatch({type:'DELETE'});
-                        " type="button" value="삭제하기" /></li>
                 </ul>
             `;
       }
       function article() {
         var state = store.getState();
+        var i = 0;
+        var aTitle, aDesc;
+        while (i < state.contents.length) {
+        if (state.contents[i].id === state.selected_id) {
+            aTitle = state.contents[i].title;
+            aDesc = state.contents[i].desc;
+            console.log(aTitle, aDesc);
+            break;
+        }
+        i = i + 1;
+        }
         if (state.mode === "create") {
           document.querySelector("#content").innerHTML = `
                 <article>
@@ -97,22 +105,50 @@
                     </form>
                 </article>
             `;
+        } else if (state.mode === "update") {
+          document.querySelector("#content").innerHTML = `
+                <article>
+                    <form onsubmit="
+                        event.preventDefault();
+                        var _title = this.title.value;
+                        var _desc = this.desc.value;
+                        store.dispatch({
+                            type:'UPDATE',
+                            title: _title,
+                            desc: _desc
+                        });
+                    ">
+                        <p>
+                            <input type="text" name="title"
+                            placeholder="이름"
+                            value=${aTitle}
+                        >
+                        </p>
+                        <p>
+                            <textarea name="desc"
+                            placeholder="설명"
+                            >${aDesc}</textarea>
+                        </p>
+                        <p>
+                            <input type="submit" value="수정">    
+                        </p>
+                    </form>
+                </article>
+            `;
         } else if (state.mode === "read") {
-          var i = 0;
-          var aTitle, aDesc;
-          while (i < state.contents.length) {
-            if (state.contents[i].id === state.selected_id) {
-              aTitle = state.contents[i].title;
-              aDesc = state.contents[i].desc;
-              console.log(aTitle, aDesc);
-              break;
-            }
-            i = i + 1;
-          }
+          
           document.querySelector("#content").innerHTML = `
                 <article>
                     <h2>${aTitle}</h2>
                     ${aDesc}
+                    <p>
+                        <input onclick="
+                            store.dispatch({type:'CHANGE_MODE', mode:'update'});
+                        " type="button" value="수정하기" />
+                        <input onclick="
+                            store.dispatch({type:'DELETE'});
+                        " type="button" value="삭제하기" />
+                    </p>
                 </article>
             `;
         } else if (state.mode === 'welcome'){
@@ -183,6 +219,21 @@
             });
         } else if (action.type === 'CHANGE_MODE'){
             newState = Object.assign({}, state, {mode:action.mode});
+        } else if (action.type === 'UPDATE'){
+            newContents = [];
+            var i = 0;
+            while(i < state.contents.length){
+                var newContent = state.contents[i];
+                if(state.selected_id === state.contents[i].id){
+                    newContent = Object.assign({},state.contents[i],{title: action.title, desc: action.desc})
+                }
+                newContents.push(newContent);
+                i = i + 1;
+            }
+            newState = Object.assign({},state,{
+                contents: newContents,
+                mode:'welcome'
+            });
         }
         console.log(action, state, newState);
         return newState;

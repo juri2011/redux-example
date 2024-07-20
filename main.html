@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
     <title>포켓몬 위키</title>
   </head>
   <body>
@@ -24,13 +25,22 @@
         }
         //TOC : Table of Contents(목록)
         function TOC(){
+            var state = store.getState();
+            console.log('state', state);
+            var i = 0;
+            var liTags = ''; //동적으로 추가 될 리스트 태그들
+
+            while(i<state.contents.length){
+                liTags = liTags + `
+                    <li>
+                        <a href=""${state.contents[i].id}>${state.contents[i].title}</a>
+                    </li>
+                `;
+                i = i + 1;
+            }
             document.querySelector('#toc').innerHTML = `
                 <nav>
-                    <ol>
-                        <li><a href="1.html">아차모</a></li>
-                        <li><a href="2.html">나무지기</a></li>
-                        <li><a href="2.html">물짱이</a></li>
-                    </ol>
+                    <ol>${liTags}</ol>
                 </nav>
             `;
         }

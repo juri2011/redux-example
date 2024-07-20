@@ -111,6 +111,7 @@
         return newState;
       }
       var store = Redux.createStore(reducer);
+      store.subscribe(article);
       subject();
       TOC();
       control();

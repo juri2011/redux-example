@@ -13,6 +13,8 @@
       }
     </style>
     <div id="red"></div>
+    <div id="blue"></div>
+    <div id="green"></div>
 
     <script>
 /* reducer의 역할 : dispatch가 action을 전달하면
@@ -26,7 +28,7 @@ function reducer(state, action) {
     var newState;
     if(action.type === 'CHANGE_COLOR'){
         //state를 복제한 값에 color: 'red' 를 덮어씌움
-        newState = Object.assign({}, state, {color:'red'});
+        newState = Object.assign({}, state, {color: action.color});
     }
     return newState;
 }
@@ -43,6 +45,32 @@ function red() {
         </div>
     `;
 }
+function blue() {
+    var state = store.getState();
+    document.querySelector("#blue").innerHTML = `
+        <div class="container" id="component_blue" style="background-color:${state.color}">
+            <h1>blue</h1>
+            <input type="button" value="fire" onclick="
+                store.dispatch({type:'CHANGE_COLOR', color:'blue'});
+            ">
+        </div>
+    `;
+}
+function green() {
+    var state = store.getState();
+    document.querySelector("#green").innerHTML = `
+        <div class="container" id="component_green" style="background-color:${state.color}">
+            <h1>green</h1>
+            <input type="button" value="fire" onclick="
+                store.dispatch({type:'CHANGE_COLOR', color:'green'});
+            ">
+        </div>
+    `;
+}
+store.subscribe(green); //state의 값이 바뀔 때마다 green함수가 호출
+green();
+store.subscribe(blue); //state의 값이 바뀔 때마다 blue함수가 호출
+blue();
 store.subscribe(red); //state의 값이 바뀔 때마다 red함수가 호출
 red();
       </script>

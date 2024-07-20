@@ -52,13 +52,19 @@
             `;
       }
       function control() {
+        var state = store.getState();
         document.querySelector("#control").innerHTML = `
                 <ul>
                     <li><a onclick="
                         event.preventDefault();
-
+                        store.dispatch({
+                            type: 'CHANGE_MODE',
+                            mode: 'create'                            
+                        });
                     " href="create">작성하기</a></li>
-                    <li><input type="button" value="삭제하기" /></li>
+                    <li><input onclick="
+                            store.dispatch({type:'DELETE'});
+                        " type="button" value="삭제하기" /></li>
                 </ul>
             `;
       }
@@ -109,6 +115,13 @@
                     ${aDesc}
                 </article>
             `;
+        } else if (state.mode === 'welcome'){
+            document.querySelector('#content').innerHTML = `
+                <article>
+                    <h2>어서오세요</h2>
+                    항목을 클릭하여 도감을 확인해보세요!    
+                </article>
+            `;
         }
       }
       function reducer(state, action) {
@@ -116,7 +129,7 @@
         if (state === undefined) {
           return {
             max_id: 3,
-            mode: "create",
+            mode: "welcome",
             selected_id: 1,
             contents: [
               {
@@ -139,7 +152,7 @@
         }
         var newState;
         if (action.type === "SELECT") {
-          newState = Object.assign({}, state, { selected_id: action.id });
+          newState = Object.assign({}, state, { selected_id: action.id, mode: 'read'});
         } else if (action.type === "CREATE") {
           //DB에서는 auto_increment 역할
           var newMaxId = state.max_id + 1;
@@ -155,6 +168,21 @@
             contents: newContents,
             mode: "read"
           });
+        } else if (action.type === 'DELETE'){
+            var newContents = [];
+            var i = 0;
+            while(i < state.contents.length){
+                if(state.selected_id !== state.contents[i].id){
+                    newContents.push(state.contents[i]);
+                }
+                i = i + 1;
+            };
+            newState = Object.assign({}, state, {
+                contents: newContents,
+                mode: 'welcome'
+            });
+        } else if (action.type === 'CHANGE_MODE'){
+            newState = Object.assign({}, state, {mode:action.mode});
         }
         console.log(action, state, newState);
         return newState;

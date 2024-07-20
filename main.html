@@ -12,25 +12,27 @@
     <div id="control"></div>
     <div id="content"></div>
     <script>
-        //header 부품화 : header 양식이 필요할 때마다 subject()를 호출하여 사용할 수 있다
-        //재사용도 가능
-        function subject(){
-            document.querySelector('#subject').innerHTML = `
+      //header 부품화 : header 양식이 필요할 때마다 subject()를 호출하여 사용할 수 있다
+      //재사용도 가능
+      function subject() {
+        document.querySelector("#subject").innerHTML = `
                 <header>
                     <h1>포켓몬 위키</h1>
                     안녕하세요? 포켓몬 위키입니다.
                     <h2>호연지방에 사는 포켓몬 목록</h2>
                 </header>
             `;
-        }
-        //TOC : Table of Contents(목록)
-        function TOC(){
-            var state = store.getState();
-            var i = 0;
-            var liTags = ''; //동적으로 추가 될 리스트 태그들
+      }
+      //TOC : Table of Contents(목록)
+      function TOC() {
+        var state = store.getState();
+        var i = 0;
+        var liTags = ""; //동적으로 추가 될 리스트 태그들
 
-            while(i<state.contents.length){
-                liTags = liTags + `
+        while (i < state.contents.length) {
+          liTags =
+            liTags +
+            `
                     <li>
                         <a onclick="
                             event.preventDefault();
@@ -41,58 +43,78 @@
                         </a>
                     </li>
                 `;
-                i = i + 1;
-            }
-            document.querySelector('#toc').innerHTML = `
+          i = i + 1;
+        }
+        document.querySelector("#toc").innerHTML = `
                 <nav>
                     <ol>${liTags}</ol>
                 </nav>
             `;
-        }
-        function control(){
-            document.querySelector('#control').innerHTML = `
+      }
+      function control() {
+        document.querySelector("#control").innerHTML = `
                 <ul>
                     <li><a href="create">작성하기</a></li>
                     <li><input type="button" value="삭제하기" /></li>
                 </ul>
             `;
+      }
+      function article() {
+        var state = store.getState();
+        var i = 0;
+        var aTitle, aDesc;
+        while(i < state.contents.length){
+            if(state.contents[i].id === state.selected_id){
+                aTitle = state.contents[i].title;
+                aDesc = state.contents[i].desc;
+                console.log(aTitle, aDesc)
+                break;
+            }
+            i = i + 1;
         }
-        function article(){
-            document.querySelector('#content').innerHTML = `
+        document.querySelector("#content").innerHTML = `
                 <article>
-                    <h2>아차모</h2>
-                    병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.
+                    <h2>${aTitle}</h2>
+                    ${aDesc}
                 </article>
             `;
+      }
+      function reducer(state, action) {
+        //최초 실행의 경우 초기값 세팅
+        if (state === undefined) {
+          return {
+            selected_id: 1,
+            contents: [
+              {
+                id: 1,
+                title: "아차모",
+                desc: "병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.",
+              },
+              {
+                id: 2,
+                title: "나무지기",
+                desc: "숲도마뱀 포켓몬. 침착하고 냉정하며 무슨 일에도 동요하지 않는다. 몸집이 큰 포켓몬이 노려봐도 한 걸음도 꿈쩍 않고 되노려본다.",
+              },
+              {
+                id: 3,
+                title: "물짱이",
+                desc: "늪물고기 포켓몬. 머리의 지느러미는 매우 민감한 레이더. 물이나 공기의 움직임으로 눈을 쓰지 않고도 주위의 모습을 포착할 수 있다.",
+              }
+            ],
+          };
         }
-        function reducer(state, action){
-            //최초 실행의 경우 초기값 세팅
-            if(state === undefined){
-                return {
-                    selected_id:null,
-                    contents: [
-                        {id:1, title:'아차모', desc:'병아리 포켓몬. 트레이너한테 딱 붙어서 아장아장 걸어간다. 입에서 내뿜는 불은 섭씨 1000도. 상대방을 숯덩이로 만들어버리는 작열하는 불덩이다.'},
-                        {id:2, title:'나무지기', desc:'숲도마뱀 포켓몬. 침착하고 냉정하며 무슨 일에도 동요하지 않는다. 몸집이 큰 포켓몬이 노려봐도 한 걸음도 꿈쩍 않고 되노려본다.'},
-                        {id:3, title:'물짱이', desc:'늪물고기 포켓몬. 머리의 지느러미는 매우 민감한 레이더. 물이나 공기의 움직임으로 눈을 쓰지 않고도 주위의 모습을 포착할 수 있다.'},
-                    ]
-                }
-            }
-            var newState;
-            if(action.type === "SELECT"){
-                newState = Object.assign({}, state, {selected_id:action.id});
-            }
-            console.log(action, state, newState);
-            return newState;
-            
+        var newState;
+        if (action.type === "SELECT") {
+          newState = Object.assign({}, state, { selected_id: action.id });
         }
-        var store = Redux.createStore(reducer);
-        subject();
-        TOC();
-        control();
-        article();
+        console.log(action, state, newState);
+        return newState;
+      }
+      var store = Redux.createStore(reducer);
+      subject();
+      TOC();
+      control();
+      article();
     </script>
-    
-    
-    
   </body>
 </html>
